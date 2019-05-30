@@ -3,7 +3,7 @@
     <!--左侧tab-->
     <div class="leftSlider">
       <div class="hang" @click="requestData('base')">
-        <el-badge is-dot class="item">
+        <el-badge :is-dot="isDot" class="item">
           <el-icon class="el-icon-bell"></el-icon>
         </el-badge>
         <span>公告</span>
@@ -39,7 +39,7 @@
         <!--中间头部-->
         <div class="content_header">
           <!--发表-->
-          <div style="display: flex;flex-direction: column;flex: 60%">
+          <div style="display: flex;flex-direction: column;flex: 60%;position: relative">
             <!--标题-->
             <el-input
               class="title"
@@ -70,10 +70,17 @@
               show-word-limit
             >
             </el-input>
+            <div style="position: absolute;right: 10px;bottom: 47px;cursor:pointer;color: #888;font-size: 16px">
+              <input id='file' type="file" name="fileupload" style="display: none"></input>
+              <label for="file" style="cursor:pointer;">
+                <el-icon class="el-icon-picture-outline" ></el-icon>
+              </label>
+            </div>
           </div>
           <!--发表按钮-->
-          <div style="display:flex;flex-direction: column;align-items: center;justify-content: space-between;flex: 1">
-            <el-button type="" plain class="btn" size="mini" @click="submitTxt" :loading="subtxtloading">发表</el-button>
+          <div style="display:flex;align-items: center;justify-content: space-between;flex: 1">
+            <el-button type="" plain class="btn" size="mini" @click="submitTxt('帖子')" :loading="subtxtloading">发表</el-button>
+            <el-button type="" plain class="btn" size="mini" @click="submitTxt('公告')" :loading="subtxtloading">发公告</el-button>
           </div>
         </div>
         <!--刷新按钮-->
@@ -90,53 +97,27 @@
                style="padding-top: 100px">
             暂无内容
           </div>
-
-          <!--公告-->
-          <div class="article_content" v-else-if="showType=='base'">
-            <div class="article_list">
-              <div class="list_content">
-                <!--<span class="list_title">爱我别走</span>-->
-                <span class='list_content_txt'>我是公告 我是公告 我是公告 baby们 !!! 看见我红色的大v没？！！！</span>
-                <img src="../../static/img/001.jpg" class="list_content_img"/>
-              </div>
-              <div class="list_bottom">
-                <img src="http://bbbsman.cn/picture/mak.jpg">
-                <img src="../../static/img/vip.png"
-                     style="width: 8px;height: 8px;margin-left: -8px;position: relative;top:4px"/>
-                <span class="list_author">白国帅</span>
-                <!--<el-icon class="el-icon-male" v-if="i.author.sex=='男'" style="font-size: 10px"></el-icon>-->
-                <!--<el-icon class="el-icon-female" v-else="i.author.sex=='女'"></el-icon>-->
-                <span class="list_author">信息与工程学院</span>
-                <span class="list_date">5月10日 19:59</span>
-                <span class="list_date interactive" style="margin-left: 20px"><el-icon
-                  class="el-icon-chat-round"></el-icon>66</span>
-                <span class="list_date interactive" style="margin-left: 10px;position:relative;top: 1px"><el-icon
-                  class="el-icon-lollipop"></el-icon>999</span>
-              </div>
-            </div>
-          </div>
-
           <!--全部帖子-->
           <div class="article_content" v-else-if="showType=='all'"
                ref="contentBox">
             <!--帖子列表-->
-            <div class="article_list" v-for="(i,s) in listContent">
-              <div class="list_content">
+            <div class="article_list" v-for="(i,s) in listContent" >
+              <div class="list_content" @click="requestData('one',i.aid)">
                 <!--标题-->
-                <span class="list_title" @click="requestData('one',i.aid)">{{i.title}}</span>
+                <span class="list_title">{{i.title}}</span>
                 <!--<span class='list_content_txt'>{{i.content}}</span>-->
-                <img v-if="s==2" src="../../static/img/001.jpg" class="list_content_img"/>
+                <img v-if="!i.pictureUrl" src="../../static/img/001.jpg" class="list_content_img"/>
               </div>
               <!--底部发布者个人信息-->
               <div class="list_bottom">
                 <img :src="i.author.headimg">
-                <span class="list_author">{{i.author.username}}</span>
-                <!--<el-icon class="el-icon-male" v-if="i.author.sex=='男'" style="font-size: 10px"></el-icon>-->
-                <!--<el-icon class="el-icon-female" v-else="i.author.sex=='女'"></el-icon>-->
+                <span class="">{{i.author.username}}</span>
+                <el-icon class="el-icon-male list_author" v-if="i.author.sex=='男'" style="color:#888;"></el-icon>
+                <el-icon class="el-icon-female list_author" v-else-if="i.author.sex=='女'" style="color: pink"></el-icon>
                 <span class="list_author">{{i.author.college}}</span>
                 <span class="list_date">{{$utils.formatDateTime(new Date(i.date))}}</span>
                 <span class="list_date interactive" style="margin-left: 20px;cursor: pointer"
-                      @click="requestData('one',i.aid)"><el-icon class="el-icon-chat-round"></el-icon> 1</span>
+                      @click="requestData('one',i.aid)"><el-icon class="el-icon-chat-round"></el-icon> {{i.countArti}}</span>
                 <span class="list_date interactive" style="margin-left: 12px;position:relative;top: 1px"
                       @click="thumbsup(i.aid)"><el-icon class="el-icon-lollipop"></el-icon> {{i.thumbsup==0?null:i.thumbsup}}</span>
               </div>
@@ -155,17 +136,22 @@
               <div class="list_bottom">
                 <img :src="oneData.author.headimg">
                 <span class="list_author">{{oneData.author.username}}</span>
-                <!--<el-icon class="el-icon-male" v-if="i.author.sex=='男'" style="font-size: 10px"></el-icon>-->
-                <!--<el-icon class="el-icon-female" v-else="i.author.sex=='女'"></el-icon>-->
+                <el-icon class="el-icon-male list_author" v-if="oneData.author.sex=='男'" style="color:#888;"></el-icon>
+                <el-icon class="el-icon-female list_author" v-else-if="oneData.author.sex=='女'" style="color: pink"></el-icon>
                 <span class="list_author">{{oneData.author.college}}</span>
                 <span class="list_date">{{$utils.formatDateTime(new Date(oneData.date))}}</span>
                 <span class="list_date interactive" style="margin-left: auto;font-size: 14px;cursor: pointer" @click=""><el-icon
-                  class="el-icon-chat-round"></el-icon> 1</span>
+                  class="el-icon-chat-round"></el-icon> {{oneData.countArti}}</span>
                 <span class="list_date interactive" style="margin-left: 12px;font-size:14px;position:relative;top: 1px"
-                      @click=""><el-icon class="el-icon-lollipop"></el-icon> {{oneData.thumbsup==0?null:oneData.thumbsup}}</span>
+                      @click="thumbsup(oneData.aid)"><el-icon class="el-icon-lollipop"></el-icon> {{oneData.thumbsup==0?null:oneData.thumbsup}}</span>
               </div>
               <!--发布内容详情-->
-              <div class="one_content">{{oneData.content}}</div>
+              <div class="one_content">
+                {{oneData.content}}
+                <div v-if="!oneData.pictureUrl">
+                  <img src="../../static/img/001.jpg" style="width: 300px;height: 200px;border-radius: 5px">
+                </div>
+              </div>
               <!--评论输入-->
               <div class="openComm">
                 <el-input
@@ -195,8 +181,8 @@
               <div class="list_bottom">
                 <img :src="i.replyer.headimg">
                 <span class="list_author">{{i.replyer.username}}</span>
-                <!--<el-icon class="el-icon-male" v-if="i.author.sex=='男'" style="font-size: 10px"></el-icon>-->
-                <!--<el-icon class="el-icon-female" v-else="i.author.sex=='女'"></el-icon>-->
+                <el-icon class="el-icon-male list_author" v-if="i.replyer.sex=='男'" style="color:#888;"></el-icon>
+                <el-icon class="el-icon-female list_author" v-else-if="i.replyer.sex=='女'" style="color: pink"></el-icon>
                 <span class="list_author">{{i.replyer.college}}</span>
                 <span class="list_date">{{$utils.formatDateTime(new Date(i.date))}}</span>
                 <span class="list_date interactive" style="margin-left: 15px;font-size: 10px;cursor: pointer"
@@ -218,10 +204,10 @@
                 <div class="list_bottom">
                   <img :src="ii.floorReplyera.headimg">
                   <span class="list_author">{{ii.floorReplyera.username}}</span>
-                  <!--<el-icon class="el-icon-male" v-if="i.author.sex=='男'" style="font-size: 10px"></el-icon>-->
-                  <!--<el-icon class="el-icon-female" v-else="i.author.sex=='女'"></el-icon>-->
+                  <el-icon class="el-icon-male list_author" v-if="ii.floorReplyera.sex=='男'" style="color:#888;"></el-icon>
+                  <el-icon class="el-icon-female list_author" v-else-if="ii.floorReplyera.sex=='女'" style="color: pink"></el-icon>
                   <span class="list_author">{{ii.floorReplyera.college}}</span>
-                  <!--<span class="list_date">{{$utils.formatDateTime(new Date(i.date))}}</span>-->
+                  <span class="list_date">{{$utils.formatDateTime(new Date(ii.date))}}</span>
                   <!--<span class="list_date interactive" style="margin-left: 15px;font-size: 10px;cursor: pointer"-->
                   <!--@click="openFid"><el-icon class="el-icon-chat-round"></el-icon> 1</span>-->
                   <span class="list_date interactive"
@@ -264,7 +250,7 @@
 
 <script>
   import {mapMutations, mapState} from 'vuex'
-
+  let file=null
   export default {
     name: "community",
     data() {
@@ -280,7 +266,8 @@
         FloorData: [],//单个数据的楼中楼信息
         oneData: {},//单个数据
         aid: '',//点开的帖子aid,
-        commTxt: '',//评论内容
+        commTxt: '',//评论内容,
+        contentImgFile:null
       }
     },
     watch: {
@@ -316,6 +303,7 @@
         isLogin: state => state.Data.isLogin,//是否登录
         uid: state => state.Data.uid,//作者唯一id
         number: state => state.Data.number,//学号
+        isDot:state => state.Data.isDot,//是否点击查看了公告
       })
     },
     methods: {
@@ -363,7 +351,7 @@
           }
           //请求全部数据
           if (type == 'all') {
-            const {topArticle, articlePageBean} = await this.$api.get(`/article/list?currentPage=1`)
+            const {topArticle, articlePageBean} = await this.$api.get(`/article/list?lable=帖子`)
             this.listContent = articlePageBean.list
             this.showType = 'all'
 
@@ -374,8 +362,11 @@
             this.showType = 'all'
 
           } else if (type == 'base') {
-
-            this.showType = 'base'
+            //关闭红点提示
+            this.save({isDot:false})
+            const {topArticle, articlePageBean} = await this.$api.get(`/article/list?lable=公告`)
+            this.listContent = articlePageBean.list
+            this.showType = 'all'
 
           } else if (type == 'one') {
             this.aid = aid
@@ -392,7 +383,7 @@
         }
       },
       //发表内容
-      async submitTxt() {
+      async submitTxt(Announcement) {
         const {uid, title, textarea, isLogin} = this
         if (uid == '' || !isLogin) {
           this.$message('请先登录', 'warning')
@@ -412,8 +403,12 @@
         }
         try {
           this.subtxtloading = true
+          // let imgFile=this.contentImgFile
+          // console.log(this,imgFile)
+          let formData = new FormData();
+          formData.append('file', file);
           //请求发表帖子接口
-          const res = await this.$api.post(`/article/add?title=${title}&content=${textarea}&uid=${uid}&lable=${'帖子'}`)
+          const res = await this.$api.post(`/article/add?title=${title}&content=${textarea}&uid=${uid}&lable=${Announcement}`,{json: formData,headers:{'Content-Type': 'multipart/form-data'}})
           await this.$utils.sleep(400)
           //成功
           if (res.data && res.data.includes('成功')) {
@@ -492,6 +487,12 @@
     mounted() {
       //改变标题栏颜色
       this.save({comm: true})
+      var uploadinput=document.getElementById("file");
+      uploadinput.addEventListener("change",function (e) {
+        console.log(e.target.files)
+        this.contentImgFile=e.target.files[0]
+        file=e.target.files[0]
+      });
     },
     //组建销毁 改变标题栏颜色
     destroyed() {
@@ -603,6 +604,8 @@
               flex-direction: column;
               text-align: left;
               min-height: 30px;
+              padding-bottom: 16px;
+              cursor: pointer;
 
               .list_title {
                 font-size: 15px;
@@ -624,7 +627,6 @@
             }
 
             .list_bottom {
-              margin-top: 16px;
               width: 100%;
               display: flex;
               justify-content: flex-end;
@@ -832,6 +834,9 @@
 
         }
       }
+    }
+    .el-icon-picture-outline:hover{
+      color: #4459aa!important;
     }
   }
 </style>

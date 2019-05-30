@@ -29,6 +29,8 @@
                       label-width="70px">
           <el-input size="small" v-model="i.value" style="width: 150px" :show-password="i.label.includes('密码')?true:null"
                     :disabled="(i.label=='手机号'||i.label.includes('码'))?false:true"></el-input>
+          <el-icon class="el-icon-male" v-if="i.value=='男'" style="font-size: 10px;color: #333"></el-icon>
+          <el-icon class="el-icon-female" v-else-if="i.value=='女'" style="font-size: 10px;color: pink"></el-icon>
           <el-button size="small" v-if="i.label=='验证码'" v-show="sendAuthCode" @click="getRandom">获取验证码</el-button>
           <el-button size="small" v-if="i.label=='验证码'" v-show="!sendAuthCode">
             <span class="auth_text_blue">{{auth_time}}</span> 秒后重新发送
@@ -262,7 +264,7 @@
 
   .information {
     position: relative;
-    height: 85vh;
+    height: 87vh;
     display: flex;
     align-items: center;
     justify-content: center;

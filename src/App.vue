@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="footerLock?'footerLock':''">
     <header class="Allheader">
       <img src="../static/img/logo.png" class="logo hoverCursor" @click="()=>this.$router.push({name:'index'})"/>
       <router-link tag="span" :to="{name:'index'}" :class="comm?'header_title':'header_title2'">首页</router-link>
@@ -20,10 +20,10 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-edit" @click.native="goInfo"> 编辑信息</el-dropdown-item>
-            <el-dropdown-item>
-              <el-icon class="el-icon-chat-dot-round"></el-icon>
-              回复我的
-            </el-dropdown-item>
+            <!--<el-dropdown-item>-->
+              <!--<el-icon class="el-icon-chat-dot-round"></el-icon>-->
+              <!--回复我的-->
+            <!--</el-dropdown-item>-->
             <el-dropdown-item @click.native="exit">
               <el-icon class="el-icon-switch-button" v-if="clickExit"></el-icon>
               <el-icon class="el-icon-loading" v-else></el-icon>
@@ -35,7 +35,7 @@
     </header>
     <router-view/>
     <div class="footer" v-if="!comm">
-      <div>
+      <div style="display: flex;flex-direction: column;height:100%;justify-content: space-around;align-items: center">
         <p>
           《数学建模》课程师生互动平台
         </p>
@@ -66,6 +66,7 @@
         userName: state => state.Data.userName,
         headimg: state => state.Data.headimg,
         comm: state => state.Data.comm,
+        footerLock: state => state.Data.footerLock,
         hostname: state => state.Data.hostname,
       })
     },
@@ -168,16 +169,15 @@
 
     .footer {
       width: 100%;
-      height: 15vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      height: 13vh;
+      text-align: center;
       padding: 10px 0;
       background: rgba(0, 0, 0, .8);
 
       p {
         margin-bottom: 5px;
         color: #aaa;
+        margin-top: 8px;
       }
     }
   }
@@ -189,5 +189,8 @@
   }
   .header_title2:hover{
     color: #4459AA!important;
+  }
+  .footerLock{
+    overflow: hidden!important;
   }
 </style>

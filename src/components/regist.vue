@@ -177,62 +177,70 @@
 
       //手动提交注册信息
       async submit() {
-        const {Data} = this
-        //遍历
-        Data.map((i, s) => {
-          const reg = /^[0-9]*$/  // 验证数字
-          //验证每一个input是否为空
-          if (i.value == null || i.value == '') {
-            this.$message(i.msg, 'error');
-            throw ''
-          }
-          //验证学号和班级
-          if (i.key == '学号' || i.key == '班级') {
-            const temp = i.value.substr(1)
-            if ((i.key == '学号' && (i.value.length != 9 || i.value[0] != 'B' || !reg.test(temp))) || (i.key == '班级' && (i.value.length != 7 || i.value[0] != 'B' || !reg.test(temp)))) {
-              this.$message(i.key == '学号' ? '请输入正确学号' : '请输入正确班级', 'error');
-              throw ''
+        // const {Data} = this
+        // //遍历
+        // Data.map((i, s) => {
+        //   const reg = /^[0-9]*$/  // 验证数字
+        //   //验证每一个input是否为空
+        //   if (i.value == null || i.value == '') {
+        //     this.$message(i.msg, 'error');
+        //     throw ''
+        //   }
+        //   //验证学号和班级
+        //   if (i.key == '学号' || i.key == '班级') {
+        //     const temp = i.value.substr(1)
+        //     if ((i.key == '学号' && (i.value.length != 9 || i.value[0] != 'B' || !reg.test(temp))) || (i.key == '班级' && (i.value.length != 7 || i.value[0] != 'B' || !reg.test(temp)))) {
+        //       this.$message(i.key == '学号' ? '请输入正确学号' : '请输入正确班级', 'error');
+        //       throw ''
+        //     }
+        //   }
+        //   //验证密码
+        //   if (i.key == '密码' && i.value.length < 6) {
+        //     this.$message('密码长度不能小于6位', 'error');
+        //     throw ''
+        //   }
+        //   if (i.key == '确认密码' && (i.value != Data[5].value)) {
+        //     this.$message('两次密码不一致', 'error');
+        //     throw ''
+        //   }
+        //   if (i.keyName) {
+        //     this.formData[i.keyName] = i.value
+        //   }
+        // })
+        this.$confirm('注册后不可更改基本信息（可更改密码）, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'success',
+          customClass:'bbbconfirm'
+        }).then(async () => {
+          try {
+            let formData = new FormData();
+            let that = this
+            let data = encodeURIComponent(JSON.stringify(this.formData))
+            formData.append('file', that.imgFile);
+            console.log('当前图片文件是', this.imgFile, '表单数据是', data)
+            this.loading = true
+            this.$utils.sleep(450)
+            //注册
+            const res = await this.$api.post(`/user/regist?userRequest=${data}`, {
+              json: formData,
+              headers: {'Content-Type': 'multipart/form-data'}
+            })//
+            if (res.erro) {
+              this.$message(res.message, 'error')
+              return
             }
-          }
-          //验证密码
-          if (i.key == '密码' && i.value.length < 6) {
-            this.$message('密码长度不能小于6位', 'error');
-            throw ''
-          }
-          if (i.key == '确认密码' && (i.value != Data[5].value)) {
-            this.$message('两次密码不一致', 'error');
-            throw ''
-          }
-          if (i.keyName) {
-            this.formData[i.keyName] = i.value
+            this.$message('注册成功', 'success')
+            this.$utils.sleep(500)
+            this.showregist = false
+            //const res= this.$refs.upload.$children[0].post(this.imgFile)
+          } catch (e) {
+            console.log(e)
+          } finally {
+            this.loading = false
           }
         })
-        try {
-          let formData = new FormData();
-          let that = this
-          let data = encodeURIComponent(JSON.stringify(this.formData))
-          formData.append('file', that.imgFile);
-          console.log('当前图片文件是', this.imgFile, '表单数据是', data)
-          this.loading = true
-          this.$utils.sleep(450)
-          //注册
-          const res = await this.$api.post(`/user/regist?userRequest=${data}`, {
-            json: formData,
-            headers: {'Content-Type': 'multipart/form-data'}
-          })//
-          if (res.erro) {
-            this.$message(res.message, 'error')
-            return
-          }
-          this.$message('注册成功', 'success')
-          this.$utils.sleep(500)
-          this.showregist = false
-          //const res= this.$refs.upload.$children[0].post(this.imgFile)
-        } catch (e) {
-          console.log(e)
-        } finally {
-          this.loading = false
-        }
+
       },
 
       //获取手机验证码
@@ -345,8 +353,13 @@
         if(this.isLogin){
           this.$router.go(-1)
         }
+    },
+    mounted(){
+      this.save({footerLock: false})
+    },
+    destroyed() {
+      this.save({footerLock: true})
     }
-
   }
 </script>
 <style lang="scss">

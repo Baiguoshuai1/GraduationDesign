@@ -7,11 +7,13 @@ const state={//要设置的全局访问的state对象
     headimg:null,//头像
     number:'',//学号
     sex:'',//性别
-    phone:null,
+    phone:null,//手机号
     college:'',//院系
     userclass:'',//班级
-    comm:false,
-    hostname:null
+    comm:false,//改变社区标题栏字体颜色
+    footerLock:true,
+    hostname:null,//主机名 用来保存超时登录返回
+    isDot:true//是否点开公告
   }
 };
 const mutations = {
