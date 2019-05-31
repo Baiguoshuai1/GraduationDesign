@@ -7,6 +7,7 @@ const state={//要设置的全局访问的state对象
     headimg:null,//头像
     number:'',//学号
     sex:'',//性别
+    power:0,//是否管理员
     phone:null,//手机号
     college:'',//院系
     userclass:'',//班级

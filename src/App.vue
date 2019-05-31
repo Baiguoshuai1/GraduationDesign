@@ -96,8 +96,8 @@
       //为每次刷新保证vuex数据存在
       let number = sessionStorage.getItem('number')
       if (number) {
-        const {uid,username,userclass,headimg,sex,college,phone} = await this.$api.post(`/user/getuser?number=${number}`)
-         this.save({uid,userName: username, isLogin: true,headimg,number,sex,college,userclass,phone})
+        const {uid,username,userclass,headimg,sex,college,phone,power} = await this.$api.post(`/user/getuser?number=${number}`)
+         this.save({uid,userName: username, isLogin: true,headimg,number,sex,college,userclass,phone,power})
       }
     },
     mounted() {

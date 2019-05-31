@@ -11,45 +11,45 @@
                 <span style="display:inline-block;padding:0;width: 70px;text-align: center"><el-icon class="el-icon-user"></el-icon></span>
               </div>
             </div>
-           <!-- <div class="hang">
+           <div class="hang">
               <el-link type="info" href="http://bbb-36256.oss-cn-hangzhou.aliyuncs.com/AngularJS%E5%8F%82%E8%80%83%E6%89%8B%E5%86%8C%20%E4%B8%AD%E6%96%87CHM%E7%89%88.rar">《Angular JS 参考手册》</el-link>
               <div class="rightBox">
-                <span class="uploadtime">{{$utils.formatDateTime(new Date(i.date))}}</span>
-                <span class="username" style="margin-left: 40px">{{i.number}}</span>
+                <span class="uploadtime" style="display: inline-block;width: 100px;white-space: nowrap;text-align: left">5月12日 21:30</span>
+                <span class="username" style="display:inline-block;width: 70px;text-align:center;white-space: nowrap">白国帅</span>
               </div>
             </div>
             <div class="hang">
               <el-link type="info" href="http://bbb-36256.oss-cn-hangzhou.aliyuncs.com/NodeExpress_jb51.rar">《Node JS Express初识》</el-link>
               <div class="rightBox">
-                <span class="uploadtime">{{$utils.formatDateTime(new Date(i.date))}}</span>
-                <span class="username" style="margin-left: 40px">{{i.number}}</span>
+                <span class="uploadtime" style="display: inline-block;width: 100px;white-space: nowrap;text-align: left">5月12日 21:31</span>
+                <span class="username" style="display:inline-block;width: 70px;text-align:center;white-space: nowrap">白国帅</span>
               </div>
 
             </div>
             <div class="hang">
               <el-link type="info" href="http://bbb-36256.oss-cn-hangzhou.aliyuncs.com/React%20%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%E4%B8%AD%E6%96%87pdf%E6%A0%BC%E5%BC%8F.rar">《React 入门教程》</el-link>
               <div class="rightBox">
-                <span class="uploadtime">{{$utils.formatDateTime(new Date(i.date))}}</span>
-                <span class="username" style="margin-left: 40px">{{i.number}}</span>
+                <span class="uploadtime" style="display: inline-block;width: 100px;white-space: nowrap;text-align: left">5月12日 21:32</span>
+                <span class="username" style="display:inline-block;width: 70px;text-align:center;white-space: nowrap">白国帅</span>
               </div>
 
             </div>
             <div class="hang">
               <el-link type="info" href="http://bbb-36256.oss-cn-hangzhou.aliyuncs.com/Vue2.0-ProgressiveWeb_jb51.rar">《Vue 2.0》</el-link>
               <div class="rightBox">
-                <span class="uploadtime">{{$utils.formatDateTime(new Date(i.date))}}</span>
-                <span class="username" style="margin-left: 40px">{{i.number}}</span>
+                <span class="uploadtime" style="display: inline-block;width: 100px;white-space: nowrap;text-align: left">5月18日 17:34</span>
+                <span class="username" style="display:inline-block;width: 70px;text-align:center;white-space: nowrap">白国帅</span>
               </div>
 
             </div>
             <div class="hang">
               <el-link type="info" href="http://bbb-36256.oss-cn-hangzhou.aliyuncs.com/mysql%E5%87%BD%E6%95%B0%E5%A4%A7%E5%85%A8%20%E4%B8%AD%E6%96%87PDF%E7%89%88.rar">《Mysql 函数大全》</el-link>
               <div class="rightBox">
-                <span class="uploadtime">{{$utils.formatDateTime(new Date(i.date))}}</span>
-                <span class="username" style="margin-left: 40px">{{i.number}}</span>
+                <span class="uploadtime" style="display: inline-block;width: 100px;white-space: nowrap;text-align: left">5月18日 20:12</span>
+                <span class="username" style="display:inline-block;width: 70px;text-align:center;white-space: nowrap">白国帅</span>
               </div>
 
-            </div>-->
+            </div>
             <div class="hang" v-for="(i,s) in fileList" >
               <el-link type="info" :href="i.filePath">《{{i.fileName}}》</el-link>
               <div class="rightBox">

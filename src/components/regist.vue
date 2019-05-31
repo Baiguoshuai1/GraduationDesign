@@ -177,36 +177,36 @@
 
       //手动提交注册信息
       async submit() {
-        // const {Data} = this
-        // //遍历
-        // Data.map((i, s) => {
-        //   const reg = /^[0-9]*$/  // 验证数字
-        //   //验证每一个input是否为空
-        //   if (i.value == null || i.value == '') {
-        //     this.$message(i.msg, 'error');
-        //     throw ''
-        //   }
-        //   //验证学号和班级
-        //   if (i.key == '学号' || i.key == '班级') {
-        //     const temp = i.value.substr(1)
-        //     if ((i.key == '学号' && (i.value.length != 9 || i.value[0] != 'B' || !reg.test(temp))) || (i.key == '班级' && (i.value.length != 7 || i.value[0] != 'B' || !reg.test(temp)))) {
-        //       this.$message(i.key == '学号' ? '请输入正确学号' : '请输入正确班级', 'error');
-        //       throw ''
-        //     }
-        //   }
-        //   //验证密码
-        //   if (i.key == '密码' && i.value.length < 6) {
-        //     this.$message('密码长度不能小于6位', 'error');
-        //     throw ''
-        //   }
-        //   if (i.key == '确认密码' && (i.value != Data[5].value)) {
-        //     this.$message('两次密码不一致', 'error');
-        //     throw ''
-        //   }
-        //   if (i.keyName) {
-        //     this.formData[i.keyName] = i.value
-        //   }
-        // })
+        const {Data} = this
+        //遍历
+        Data.map((i, s) => {
+          const reg = /^[0-9]*$/  // 验证数字
+          //验证每一个input是否为空
+          if (i.value == null || i.value == '') {
+            this.$message(i.msg, 'error');
+            throw ''
+          }
+          //验证学号和班级
+          if (i.key == '学号' || i.key == '班级') {
+            const temp = i.value.substr(1)
+            if ((i.key == '学号' && (i.value.length != 9 || i.value[0] != 'B' || !reg.test(temp))) || (i.key == '班级' && (i.value.length != 7 || i.value[0] != 'B' || !reg.test(temp)))) {
+              this.$message(i.key == '学号' ? '请输入正确学号' : '请输入正确班级', 'error');
+              throw ''
+            }
+          }
+          //验证密码
+          if (i.key == '密码' && i.value.length < 6) {
+            this.$message('密码长度不能小于6位', 'error');
+            throw ''
+          }
+          if (i.key == '确认密码' && (i.value != Data[5].value)) {
+            this.$message('两次密码不一致', 'error');
+            throw ''
+          }
+          if (i.keyName) {
+            this.formData[i.keyName] = i.value
+          }
+        })
         this.$confirm('注册后不可更改基本信息（可更改密码）, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -294,7 +294,7 @@
           //登录请求
           const login = await this.$api.post(`/user/login?number=${userName}&password=${password}`)
           console.log(login)
-          const{uid,headimg,userclass,college,number,sex,username} = login
+          const{uid,headimg,userclass,college,number,sex,username,power} = login
           await this.$utils.sleep(400)
           //登录失败
           if (login.erro) {
@@ -317,7 +317,7 @@
           //为以后userid验证
           sessionStorage.setItem('number', number)
           sessionStorage.setItem('headimg', headimg)
-          this.save({uid,userName: username, isLogin: true,headimg,number,sex,college,userclass})
+          this.save({uid,userName: username, isLogin: true,headimg,number,sex,college,power,userclass})
 
           //返回进入此页面的上一个页面
           if(this.$route.query.redirect == location.hostname){

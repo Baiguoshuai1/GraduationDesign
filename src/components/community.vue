@@ -80,7 +80,7 @@
           <!--发表按钮-->
           <div style="display:flex;align-items: center;justify-content: space-between;flex: 1">
             <el-button type="" plain class="btn" size="mini" @click="submitTxt('帖子')" :loading="subtxtloading">发表</el-button>
-            <el-button type="" plain class="btn" size="mini" @click="submitTxt('公告')" :loading="subtxtloading">发公告</el-button>
+            <el-button type="" plain class="btn" size="mini" @click="submitTxt('公告')" :loading="subtxtloading2">发公告</el-button>
           </div>
         </div>
         <!--刷新按钮-->
@@ -106,7 +106,7 @@
                 <!--标题-->
                 <span class="list_title">{{i.title}}</span>
                 <!--<span class='list_content_txt'>{{i.content}}</span>-->
-                <img v-if="!i.pictureUrl" src="../../static/img/001.jpg" class="list_content_img"/>
+                <img v-if="i.pictureUrl" :src="i.pictureUrl" class="list_content_img"/>
               </div>
               <!--底部发布者个人信息-->
               <div class="list_bottom">
@@ -144,12 +144,13 @@
                   class="el-icon-chat-round"></el-icon> {{oneData.countArti}}</span>
                 <span class="list_date interactive" style="margin-left: 12px;font-size:14px;position:relative;top: 1px"
                       @click="thumbsup(oneData.aid)"><el-icon class="el-icon-lollipop"></el-icon> {{oneData.thumbsup==0?null:oneData.thumbsup}}</span>
+                <span class="interactive" style="margin-left: 15px;" @click="deleteArticle(oneData.aid)"><el-icon class="el-icon-delete"></el-icon></span>
               </div>
               <!--发布内容详情-->
               <div class="one_content">
                 {{oneData.content}}
-                <div v-if="!oneData.pictureUrl">
-                  <img src="../../static/img/001.jpg" style="width: 300px;height: 200px;border-radius: 5px">
+                <div v-if="oneData.pictureUrl">
+                  <img :src="i.pictureUrl" style="width: 300px;height: 200px;border-radius: 5px">
                 </div>
               </div>
               <!--评论输入-->
@@ -187,7 +188,7 @@
                 <span class="list_date">{{$utils.formatDateTime(new Date(i.date))}}</span>
                 <span class="list_date interactive" style="margin-left: 15px;font-size: 10px;cursor: pointer"
                       @click="openFid(i.aid,i.cid,i.replyer.uid)"><el-icon
-                  class="el-icon-chat-round"></el-icon> 1</span>
+                  class="el-icon-chat-round"></el-icon> {{i.countcomm}}</span>
                 <span class="list_date interactive" style="margin-left: 12px;font-size:10px;position:relative;top: 1px"
                       @click="thumbsup('',i.cid)"><el-icon class="el-icon-lollipop"></el-icon> {{i.thumbsup==0?null:i.thumbsup}}</span>
               </div>
@@ -259,6 +260,7 @@
         textarea: '',//输入框内容
         listContent: [],//列表动态数据
         subtxtloading: false,//发表loading
+        subtxtloading2: false,//发表公告loading
         contentLoading: false,//内容加载loading
         type: '',    //当前请求类型
         showType: 'all',//展示类型
@@ -304,6 +306,8 @@
         uid: state => state.Data.uid,//作者唯一id
         number: state => state.Data.number,//学号
         isDot:state => state.Data.isDot,//是否点击查看了公告
+        power:state => state.Data.power,//是否管理员
+
       })
     },
     methods: {
@@ -437,7 +441,21 @@
           this.requestData(this.type, this.aid, true)
         }
       },
-
+      //删帖
+      async deleteArticle(aid){
+        if(this.power==0){
+          this.$message('管理员才可以删帖哦,好不容易有了数据','error')
+          return
+        }
+        const res=await this.$api.post(`/article/delete?aid=${aid}`)
+        if(res.data.includes(`成功`)){
+          this.$message('删除成功','success')
+          //返回
+          this.requestData('all')
+        }else{
+          this.$message('删除失败','error')
+        }
+      },
       //评论
       async openComm(aid) {
         if (this.commTxt == '') {
@@ -682,7 +700,7 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            padding-right: 20px;
+            padding-right: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid #ddd;
 
