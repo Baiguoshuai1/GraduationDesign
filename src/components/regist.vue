@@ -136,6 +136,7 @@
           {key: "确认密码", value: '', placeholder: '再次输入密码', msg: '请再次输入密码'},
           {key: "手机号码", value: '', placeholder: '请输入手机号', msg: '请输入手机号', keyName: 'phone'},
           {key: "验证码", value: '', placeholder: '请输入验证码', msg: '请输入验证码', keyName: 'random'},
+          {key: "管理员识别码", value: '', placeholder: '注册为管理员', keyName: 'vip'},
         ],
         formData: {
           dd: 1
@@ -182,7 +183,7 @@
         Data.map((i, s) => {
           const reg = /^[0-9]*$/  // 验证数字
           //验证每一个input是否为空
-          if (i.value == null || i.value == '') {
+          if ((i.value == '' || i.value == '')&&i.keyName!='vip') {
             this.$message(i.msg, 'error');
             throw ''
           }
@@ -246,7 +247,7 @@
       //获取手机验证码
       async getRandom() {
         const {Data} = this
-        const phone = Data[Data.length - 2].value
+        const phone = Data[Data.length - 3].value
         //验证手机号
         let TEL_REGEXP = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
         if (phone == '') {
