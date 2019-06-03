@@ -104,7 +104,7 @@
             <div class="article_list" v-for="(i,s) in listContent" >
               <div class="list_content" @click="requestData('one',i.aid)">
                 <!--标题-->
-                <span class="list_title">{{i.title}}</span>
+                <span class="list_title" >{{i.title}}</span>
                 <!--<span class='list_content_txt'>{{i.content}}</span>-->
                 <img v-if="i.pictureUrl" :src="i.pictureUrl" class="list_content_img"/>
               </div>
@@ -148,9 +148,11 @@
               </div>
               <!--发布内容详情-->
               <div class="one_content">
-                {{oneData.content}}
-                <div v-if="oneData.pictureUrl">
-                  <img :src="i.pictureUrl" style="width: 300px;height: 200px;border-radius: 5px">
+                <span>
+                   {{oneData.content}}
+                </span>
+                <div v-if="oneData.pictureUrl" style="margin-top: 20px">
+                  <img :src="oneData.pictureUrl" style="width: 300px;height: 200px;border-radius: 5px">
                 </div>
               </div>
               <!--评论输入-->
@@ -430,6 +432,11 @@
       },
       //点赞
       async thumbsup(aid = null, cid = null, fid = null) {
+        const {uid, isLogin} = this
+        if (uid == '' || !isLogin) {
+          this.$message('请先登录', 'warning')
+          return
+        }
         let params = {
           aid: aid,
           cid: cid,
@@ -458,6 +465,11 @@
       },
       //评论
       async openComm(aid) {
+        const {uid, isLogin} = this
+        if (uid == '' || !isLogin) {
+          this.$message('请先登录', 'warning')
+          return
+        }
         if (this.commTxt == '') {
           this.$message('输入不能为空', 'error')
           return
@@ -482,6 +494,11 @@
           showCancelButton: false,
           confirmButtonText: '发送'
         }).then(async ({value}) => {
+          const {uid, isLogin} = this
+          if (uid == '' || !isLogin) {
+            this.$message('请先登录', 'warning')
+            return
+          }
           if (!value || !value.length > 0) {
             this.$message('输入不能为空', 'error')
             return
@@ -536,7 +553,7 @@
       height: 25rem;
       border-radius: 6px;
       margin-top: 90px;
-      margin-left: 10rem;
+      margin-left: auto;
 
       .hang {
         margin-bottom: 30px;
@@ -565,7 +582,7 @@
       width: 50%;
       margin-top: 90px;
       justify-content: space-between;
-      margin-left: 50px;
+      margin-left: 5rem;
 
       .content {
         display: flex;
@@ -628,6 +645,7 @@
               .list_title {
                 font-size: 15px;
                 font-weight: 400;
+                padding-bottom: 30px;
                 cursor: pointer;
               }
 

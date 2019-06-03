@@ -178,7 +178,11 @@
 
       //手动提交注册信息
       async submit() {
-        const {Data} = this
+        const {Data,imgFile} = this
+        if(imgFile==null||imgFile==''){
+          this.$message('请上传头像', 'error');
+          return
+        }
         //遍历
         Data.map((i, s) => {
           const reg = /^[0-9]*$/  // 验证数字
@@ -453,7 +457,7 @@
 
           span {
             text-align: right;
-            width: 60px;
+            width: 76px;
             white-space: nowrap;
             margin-right: 20px;
           }

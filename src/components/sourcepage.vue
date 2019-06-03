@@ -93,6 +93,7 @@
         number: state => state.Data.number,//学号
         isLogin: state => state.Data.isLogin,
         username: state => state.Data.userName,
+        uid: state => state.Data.uid,
       })
     },
     methods:{
@@ -100,6 +101,11 @@
         'save'
       ]),
       beforeAvatarUpload(file) {
+        const {uid, isLogin} = this
+        if (uid == '' || !isLogin) {
+          this.$message('请先登录', 'warning')
+          return false;
+        }
         if(!this.isLogin) {
           //重新登录
           this.$message('登录超时', 'warning')
