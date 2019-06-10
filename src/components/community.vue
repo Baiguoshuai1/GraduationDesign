@@ -408,7 +408,11 @@
           return
         }
         try {
-          this.subtxtloading = true
+          if(Announcement=='公告'){
+            this.subtxtloading2 = true
+          }else {
+            this.subtxtloading = true
+          }
           // let imgFile=this.contentImgFile
           // console.log(this,imgFile)
           let formData = new FormData();
@@ -427,6 +431,7 @@
           }
         } finally {
           this.subtxtloading = false
+          this.subtxtloading2 = false
         }
 
       },
