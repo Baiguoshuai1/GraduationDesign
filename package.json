@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "ali-oss": "^4.13.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.3",
     "element-ui": "^2.8.2",
     "http": "0.0.0",
